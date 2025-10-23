@@ -4,6 +4,7 @@ version: 0.0.1
 repository: https://github.com/yahska-net/flow_drawer
 issue_tracker: https://github.com/yahska-net/flow_drawer/issues
 license: MIT
+publisher: yahska.net
 
 environment:
   sdk: ^3.9.2
