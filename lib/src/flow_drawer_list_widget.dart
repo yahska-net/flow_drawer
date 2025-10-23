@@ -1,7 +1,9 @@
 import 'package:flow_drawer/src/flow_drawer_controller.dart';
 import 'package:flutter/material.dart';
 
+/// this items lists the drawer menu items // not the top bar
 class FlowDrawerListWidget extends StatelessWidget {
+  /// flow controlls
   const FlowDrawerListWidget({
     super.key,
     required this.drawerItems,
@@ -10,9 +12,16 @@ class FlowDrawerListWidget extends StatelessWidget {
     required this.drawerPadding,
   });
 
+  /// drawer items
   final List<Widget> drawerItems;
+
+  /// controller,
   final FlowDrawerController controller;
+
+  /// recieves  vle bussy
   final bool isOpen;
+
+  /// drawer padding
   final EdgeInsets drawerPadding;
 
   @override

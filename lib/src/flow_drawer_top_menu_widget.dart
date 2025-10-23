@@ -2,7 +2,9 @@ import 'package:flow_drawer/flow_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+/// Top Bar Menu inside Flow Drawer
 class FlowTopMenu extends HookWidget {
+  /// Top bar Menu Controlls
   const FlowTopMenu({
     super.key,
     this.menuWidth = double.infinity,
@@ -41,39 +43,96 @@ class FlowTopMenu extends HookWidget {
     this.rightMenuPadding = const EdgeInsets.all(14),
   });
 
+  /// controlls width of top bar menu
   final double menuWidth;
+
+  /// controlls the duration of animation
   final int animationDuration;
+
+  /// controlls the animation curve
   final Curve animationCurve;
+
+  /// controller for animation open, close and toggle
   final FlowDrawerController controller;
 
   // Left Menu Controls
+  /// moves the left menu button in x axis
   final double leftMenuOffsetX;
+
+  /// moves the left menu button in y axis
   final double leftMenuOffsetY;
+
+  /// uses to scale up and down view size
   final double leftMenuScale;
+
+  /// uses to rotate leftside menu button in x axis
   final double leftMenuRotateX;
+
+  /// uses to rotate leftside menu button in y axis
   final double leftMenuRotateY;
+
+  /// uses to rotate leftside menu button in z axis
   final double leftMenuRotateZ;
+
+  /// this set the position of left menu button when controller is in closed state
   final Offset leftMenuInitOffset;
+
+  /// used to change icon of left menu
   final Icon leftMenuIcon;
+
+  /// void callback function on tap
   final VoidCallback? onLeftTap;
+
+  /// controlls the color of left button menu background
   final Color leftMenuBgColor;
+
+  /// controlls the alpha value of the color
   final int leftMenuBgAlpha;
+
+  /// controlls the left menu button radius
   final double leftMenuRadius;
+
+  /// controlls the left menu button padding
   final EdgeInsets leftMenuPadding;
 
   // Right Menu Controls
+  /// moves the right menu button in x axis
   final double rightMenuOffsetX;
+
+  /// moves the right menu button in y axis
   final double rightMenuOffsetY;
+
+  /// scale right menu bar button
   final double rightMenuScale;
+
+  /// ratate right side menu bar in x axis
   final double rightMenuRotateX;
+
+  /// rotate right side menu bar in y axis
   final double rightMenuRotateY;
+
+  /// rotate right side menu bar in z axis
   final double rightMenuRotateZ;
+
+  /// sets initial position of right side top bar menu button
   final Offset rightMenuInitOffset;
+
+  /// changes the icon for right menu
   final Icon rightMenuIcon;
+
+  /// void callback fn on tap right button
   final VoidCallback? onRightTap;
+
+  /// changes the color of right menu bar
   final Color rightMenuBgColor;
+
+  /// changes the alpha value of color
   final int rightMenuBgAlpha;
+
+  /// change the radius of right side bar menu
   final double rightMenuRadius;
+
+  /// controlls the padding
   final EdgeInsets rightMenuPadding;
 
   @override

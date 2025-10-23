@@ -1,7 +1,9 @@
 import 'package:flow_drawer/flow_drawer.dart';
 import 'package:flutter/material.dart';
 
+/// Sample Drawer menu list item for easy implementation of flow drawer. With this widget user can add drawer menu items easly with or without a cutsom widget.
 class FlowDrawerMenuItem extends StatelessWidget {
+  /// controlls of this widget
   const FlowDrawerMenuItem({
     super.key,
     required this.icon,
@@ -14,15 +16,31 @@ class FlowDrawerMenuItem extends StatelessWidget {
     required this.controller,
   });
 
+  /// changes the icon
   final Icon icon;
+
+  /// changes the text
   final String text;
+
+  ///. changes the text font size
   final double fontSize;
+
+  /// spacing between icon and text
   final double spacing;
+
+  /// padding arouynd the icon and text
   final EdgeInsets padding;
+
+  /// void call back function
   final VoidCallback? onTap;
+
+  ///. controlls the delay for excecuting the ontap function, basically after the animation time
   final int onTapDelay;
+
+  /// recieves flow conroller
   final FlowDrawerController controller;
 
+  /// handles the menu iten
   void handleMenuClick({
     required FlowDrawerController controller,
     VoidCallback? onTap,
