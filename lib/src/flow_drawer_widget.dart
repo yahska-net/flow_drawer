@@ -155,8 +155,13 @@ class FlowDrawer extends HookWidget {
           child: Transform(
             alignment: Alignment.center,
             transform: Matrix4.identity()
-              ..translate(drawerBackgroundDelta * animation, 0)
-              ..scale(drawerBackgroundScale),
+              ..translateByDouble(drawerBackgroundDelta * animation, 0, 0, 1.0)
+              ..scaleByDouble(
+                drawerBackgroundScale,
+                drawerBackgroundScale,
+                1.0,
+                1.0,
+              ),
             child: Container(
               decoration: BoxDecoration(
                 image: drawerImage,

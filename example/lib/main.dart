@@ -1,3 +1,5 @@
+import 'package:example/screens/home.dart';
+import 'package:example/screens/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flow_drawer/flow_drawer.dart';
 
@@ -32,26 +34,34 @@ class _FlowDrawerExampleState extends State<FlowDrawerExample> {
       FlowDrawerMenuItem(
         icon: Icon(Icons.home, size: 22, color: Colors.white),
         text: "Home",
-        onTap: () => print("Home"),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (ctx) => Home())),
         controller: controller,
       ),
       FlowDrawerMenuItem(
         icon: Icon(Icons.verified_user, size: 22, color: Colors.white),
         text: "Security",
-        onTap: () => print("security"),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (ctx) => Search())),
         controller: controller,
       ),
       FlowDrawerMenuItem(
-        icon: Icon(Icons.verified_user, size: 22, color: Colors.white),
-        text: "Security",
-        onTap: () => print("security"),
+        icon: Icon(Icons.search_outlined, size: 22, color: Colors.white),
+        text: "Search",
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (ctx) => Home())),
         controller: controller,
       ),
       SizedBox(height: 40),
       FlowDrawerMenuItem(
         icon: Icon(Icons.logout_outlined, size: 22, color: Colors.white),
         text: "Logout",
-        onTap: () => print("Logged out"),
+        onTap: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (ctx) => Search())),
         controller: controller,
       ),
     ];
