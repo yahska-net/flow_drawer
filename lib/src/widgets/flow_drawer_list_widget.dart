@@ -10,6 +10,8 @@ class FlowDrawerListWidget extends StatelessWidget {
     required this.controller,
     required this.isOpen,
     required this.drawerPadding,
+    required this.shrinkWrap,
+    required this.physics,
   });
 
   /// drawer items
@@ -21,8 +23,14 @@ class FlowDrawerListWidget extends StatelessWidget {
   /// recieves  vle bussy
   final bool isOpen;
 
+  /// Shrin warp for drawer menu item list
+  final bool shrinkWrap;
+
   /// drawer padding
   final EdgeInsets drawerPadding;
+
+  /// Scrolls physics of list
+  final ScrollPhysics physics;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +41,10 @@ class FlowDrawerListWidget extends StatelessWidget {
           width: double.infinity,
           height: double.infinity,
           padding: drawerPadding,
-          // color: Colors.blue,
           child: ListView.builder(
             itemCount: drawerItems.length,
+            shrinkWrap: shrinkWrap,
+            physics: physics,
             itemBuilder: (context, index) => AnimatedContainer(
               curve: Curves.decelerate,
               transform: Matrix4.translationValues(isOpen ? 0 : -180, 0, 0),

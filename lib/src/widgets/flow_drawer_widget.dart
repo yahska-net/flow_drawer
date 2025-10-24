@@ -42,6 +42,12 @@ class FlowDrawer extends HookWidget {
   /// Scale during animation
   final EdgeInsets drawerPadding;
 
+  /// Shrink Wrap for drawer items list
+  final bool drawerShrinkWrap;
+
+  /// SCroll physics of drawer items list
+  final ScrollPhysics drawerPhysics;
+
   /// Padding for drawer list
 
   /// ========== DRAWER CARD SHADOW CONTROLS ==========
@@ -137,6 +143,8 @@ class FlowDrawer extends HookWidget {
     this.drawerBackgroundDelta = 100,
     this.drawerBackgroundScale = 1.7,
     this.drawerPadding = const EdgeInsets.only(top: 100, left: 30),
+    this.drawerShrinkWrap = false,
+    this.drawerPhysics = const NeverScrollableScrollPhysics(),
 
     /// ----- Shadow Card -----
     this.shadowCardColor = Colors.white,
@@ -235,6 +243,8 @@ class FlowDrawer extends HookWidget {
           controller: controller,
           isOpen: isItemsOpen.value,
           drawerPadding: drawerPadding,
+          shrinkWrap: drawerShrinkWrap,
+          physics: drawerPhysics,
         ),
 
         /// Top Menu,
