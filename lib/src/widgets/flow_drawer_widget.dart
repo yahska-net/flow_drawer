@@ -1,7 +1,7 @@
-import 'package:flow_drawer/src/flow_drawer_list_widget.dart';
+import 'package:flow_drawer/src/widgets/flow_drawer_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'flow_drawer_controller.dart';
+import '../controllers/flow_drawer_controller.dart';
 
 /// Main Drawer Wrapper
 class FlowDrawer extends HookWidget {

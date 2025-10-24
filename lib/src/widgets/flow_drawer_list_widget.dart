@@ -1,4 +1,4 @@
-import 'package:flow_drawer/src/flow_drawer_controller.dart';
+import 'package:flow_drawer/src/controllers/flow_drawer_controller.dart';
 import 'package:flutter/material.dart';
 
 /// this items lists the drawer menu items // not the top bar
