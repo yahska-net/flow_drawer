@@ -1,6 +1,6 @@
 name: flow_drawer
 description: "A custom animated drawer package for Flutter apps."
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/yahska-net/flow_drawer
 issue_tracker: https://github.com/yahska-net/flow_drawer/issues
 license: MIT
