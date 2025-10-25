@@ -1,3 +1,4 @@
+import 'package:flow_drawer/src/enums/flow_drawer_positions_enum.dart';
 import 'package:flow_drawer/src/widgets/flow_drawer_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -48,6 +49,9 @@ class FlowDrawer extends HookWidget {
   /// SCroll physics of drawer items list
   final ScrollPhysics drawerPhysics;
 
+  /// sets the drawer list position
+  final FlowDrawerPosition drawerPosition;
+
   /// Padding for drawer list
 
   /// ========== DRAWER CARD SHADOW CONTROLS ==========
@@ -94,7 +98,6 @@ class FlowDrawer extends HookWidget {
   /// X-axis 3D rotation of child
 
   /// ========== DRAWER BEHAVIOR CONTROLS ==========
-  final double maxSlide;
 
   /// Max drawer slide width
   final int animationDuration;
@@ -107,6 +110,9 @@ class FlowDrawer extends HookWidget {
 
   /// Delay before menu items appear
   final int itemsExitDelay;
+
+  /// each items enter animation delay
+  final int itemsEnterAnimationDelay;
 
   /// Delay before menu items disappear
 
@@ -145,6 +151,7 @@ class FlowDrawer extends HookWidget {
     this.drawerPadding = const EdgeInsets.only(top: 100, left: 30),
     this.drawerShrinkWrap = false,
     this.drawerPhysics = const NeverScrollableScrollPhysics(),
+    this.drawerPosition = FlowDrawerPosition.left,
 
     /// ----- Shadow Card -----
     this.shadowCardColor = Colors.white,
@@ -164,11 +171,70 @@ class FlowDrawer extends HookWidget {
     this.cardRotateX = 0,
 
     /// ----- Drawer Animation Behavior -----
-    this.maxSlide = 250.0,
     this.animationDuration = 400,
     this.animationCurve = Curves.decelerate,
-    this.itemsEnterDelay = 0,
-    this.itemsExitDelay = 200,
+    this.itemsEnterDelay = 50,
+    this.itemsExitDelay = 150,
+    this.itemsEnterAnimationDelay = 80,
+
+    /// ------- Top Menu Bar ---------
+    this.enableTopMenu = false,
+    this.topMenu,
+  });
+
+  /// Contructor for right side dock drawer
+  /// ========== CONSTRUCTOR ==========
+  const FlowDrawer.rightDocked({
+    super.key,
+    required this.child,
+    required this.drawerItems,
+    required this.controller,
+
+    this.enableSwipeToClose = true,
+    this.enableSwipeToOpen = true,
+    this.enableTapScreenToClose = true,
+
+    /// ----- Drawer Background -----
+    this.drawerGradient = const LinearGradient(
+      colors: [
+        Color.fromARGB(255, 172, 0, 0),
+        Color.fromARGB(255, 173, 86, 195),
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    this.color,
+    this.drawerImage,
+    this.drawerBackgroundDelta = 100,
+    this.drawerBackgroundScale = 1.7,
+    this.drawerPadding = const EdgeInsets.only(top: 100, left: 30),
+    this.drawerShrinkWrap = false,
+    this.drawerPhysics = const NeverScrollableScrollPhysics(),
+    this.drawerPosition = FlowDrawerPosition.right,
+
+    /// ----- Shadow Card -----
+    this.shadowCardColor = Colors.white,
+    this.shadowCardColorAlpha = 100,
+    this.shadowCardRadius = 50,
+    this.shadowOffsetX = 100,
+    this.shadowOffsetY = 35,
+    this.shadowCardScale = 0.1,
+
+    /// ----- Main Card / Child -----
+    this.cardRadius = 50,
+    this.childOffsetX = -370,
+    this.childOffsetY = 20,
+    this.childScale = 0.45,
+    this.childRotationZ = -0.04,
+    this.cardRotateY = 0,
+    this.cardRotateX = 0,
+
+    /// ----- Drawer Animation Behavior -----
+    this.animationDuration = 400,
+    this.animationCurve = Curves.decelerate,
+    this.itemsEnterDelay = 50,
+    this.itemsExitDelay = 150,
+    this.itemsEnterAnimationDelay = 80,
 
     /// ------- Top Menu Bar ---------
     this.enableTopMenu = false,
@@ -245,6 +311,8 @@ class FlowDrawer extends HookWidget {
           drawerPadding: drawerPadding,
           shrinkWrap: drawerShrinkWrap,
           physics: drawerPhysics,
+          position: drawerPosition,
+          itemsEnterAnimationDelay: itemsEnterAnimationDelay,
         ),
 
         /// Top Menu,
@@ -292,9 +360,15 @@ class FlowDrawer extends HookWidget {
                     /// Optional: track starting point
                   },
                   onHorizontalDragUpdate: (details) {
-                    final isSwipingLeft = details.delta.dx < -5;
+                    final isLeftDrawer =
+                        drawerPosition == FlowDrawerPosition.left;
+                    final shouldClose = isLeftDrawer
+                        ? details.delta.dx <
+                              -5 // swipe left to close left drawer
+                        : details.delta.dx >
+                              5; // swipe right to close right drawer
 
-                    if (isSwipingLeft && enableSwipeToClose) {
+                    if (shouldClose && enableSwipeToClose) {
                       controller.close();
                     }
                   },
@@ -302,20 +376,35 @@ class FlowDrawer extends HookWidget {
                 ),
               ),
               enableSwipeToOpen
-                  ? Positioned(
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      width: 20,
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onHorizontalDragUpdate: (details) {
-                          if (details.delta.dx > 10) {
-                            controller.open();
-                          }
-                        },
-                      ),
-                    )
+                  ? drawerPosition == FlowDrawerPosition.left
+                        ? Positioned(
+                            left: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: 20,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onHorizontalDragUpdate: (details) {
+                                if (details.delta.dx > 10) {
+                                  controller.open();
+                                }
+                              },
+                            ),
+                          )
+                        : Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            width: 20,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onHorizontalDragUpdate: (details) {
+                                if (details.delta.dx < -10) {
+                                  controller.open();
+                                }
+                              },
+                            ),
+                          )
                   : SizedBox.shrink(),
             ],
           ),
