@@ -1,3 +1,9 @@
+## 🎬 Demo
+
+![Flow Drawer Demo - Left Docked Drawer](https://github.com/yahska-net/flow_drawer/blob/main/assets/flow_drawer_left_dock.gif?raw=true)
+
+![Flow Drawer Demo - Right Docked Drawer](https://github.com/yahska-net/flow_drawer/blob/main/assets/flow_drawer_right_dock.gif?raw=true)
+
 # flow_drawer
 
 A flexible and animated side drawer package for Flutter.  
