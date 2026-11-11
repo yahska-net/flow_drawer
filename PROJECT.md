@@ -22,6 +22,7 @@ Last updated: 2026-11-12
 - Git branch: `main`, tracking `origin/main`.
 - Static analysis: passes with no issues on 2026-11-12.
 - Tests: eight controller and widget tests cover state transitions, left/right item placement, rapid toggles, disposal, reduced motion, edge swipes, and semantics.
+- Android example: debug APK build passes with Flutter 3.47.7. The current toolchain emits advance deprecation notices for a future Gradle 9/AGP 9/Kotlin 2.3 migration; AGP 9 also requires a separate Flutter DSL migration and is intentionally not part of this compatibility fix.
 - Repository hygiene: local `.env` variants are ignored (while `.env.example` may be tracked); no secrets were found in the reviewed source.
 
 ## Completed Hardening
@@ -44,3 +45,4 @@ Last updated: 2026-11-12
 
 - 2026-11-12: Initial repository analysis completed. Added explicit local environment-file ignores; no production implementation changes were made and remediation remains pending.
 - 2026-11-12: Completed the reliability, accessibility, responsive-layout, compatibility, documentation, and test hardening milestone for `0.0.4`.
+- 2026-11-12: Upgraded the example Android toolchain to Gradle 8.14, Android Gradle Plugin 8.11.1, and Kotlin Gradle Plugin 2.2.20 to satisfy Flutter 3.47's build validation while avoiding the separate AGP 9 DSL migration.
