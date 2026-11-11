@@ -1,45 +1,44 @@
-import 'package:flow_drawer/src/controllers/flow_drawer_controller.dart';
 import 'package:flow_drawer/src/enums/flow_drawer_positions_enum.dart';
 import 'package:flutter/material.dart';
 
-/// this items lists the drawer menu items // not the top bar
+/// Displays and animates the drawer's menu items.
 class FlowDrawerListWidget extends StatelessWidget {
-  /// flow controlls
+  /// Creates a list of animated drawer items.
   const FlowDrawerListWidget({
     super.key,
     required this.drawerItems,
-    required this.controller,
     required this.isOpen,
     required this.drawerPadding,
     required this.shrinkWrap,
     required this.physics,
     required this.position,
     required this.itemsEnterAnimationDelay,
+    this.disableAnimations = false,
   });
 
-  /// drawer items
+  /// Widgets displayed in the drawer.
   final List<Widget> drawerItems;
 
-  /// controller,
-  final FlowDrawerController controller;
-
-  /// recieves  vle bussy
+  /// Whether the items should be in their visible position.
   final bool isOpen;
 
-  /// Shrin warp for drawer menu item list
+  /// Whether the list should size itself to its contents.
   final bool shrinkWrap;
 
-  /// drawer padding
+  /// Padding around the drawer items.
   final EdgeInsets drawerPadding;
 
-  /// Scrolls physics of list
+  /// Scroll behavior for the item list.
   final ScrollPhysics physics;
 
-  /// define alignment of list
+  /// Physical edge where the items are aligned.
   final FlowDrawerPosition position;
 
-  /// each items enter animation delay
+  /// Additional animation duration applied to each successive item.
   final int itemsEnterAnimationDelay;
+
+  /// Whether item transitions should complete without animation.
+  final bool disableAnimations;
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +61,16 @@ class FlowDrawerListWidget extends StatelessWidget {
                 curve: Curves.decelerate,
                 transform: Matrix4.translationValues(
                   isOpen
-                      ? (position == FlowDrawerPosition.right ? 200 : 0)
-                      : (position == FlowDrawerPosition.right ? 350 : -180),
+                      ? 0
+                      : (position == FlowDrawerPosition.right ? 180 : -180),
                   0,
                   0,
                 ),
-                duration: Duration(
-                  milliseconds: 200 + (index * itemsEnterAnimationDelay),
-                ),
+                duration: disableAnimations
+                    ? Duration.zero
+                    : Duration(
+                        milliseconds: 200 + (index * itemsEnterAnimationDelay),
+                      ),
                 child: drawerItems[index],
               ),
             ),

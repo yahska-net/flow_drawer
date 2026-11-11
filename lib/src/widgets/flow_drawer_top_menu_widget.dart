@@ -2,9 +2,9 @@ import 'package:flow_drawer/flow_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-/// Top Bar Menu inside Flow Drawer
+/// Animated leading and trailing controls displayed above a [FlowDrawer].
 class FlowTopMenu extends HookWidget {
-  /// Top bar Menu Controlls
+  /// Creates an animated top menu.
   const FlowTopMenu({
     super.key,
     this.menuWidth = double.infinity,
@@ -26,6 +26,7 @@ class FlowTopMenu extends HookWidget {
     this.leftMenuBgAlpha = 50,
     this.leftMenuRadius = 50,
     this.leftMenuPadding = const EdgeInsets.all(14),
+    this.leftMenuTooltip,
 
     // Right Menu Params
     this.rightMenuOffsetX = -80,
@@ -41,99 +42,106 @@ class FlowTopMenu extends HookWidget {
     this.rightMenuBgAlpha = 50,
     this.rightMenuRadius = 50,
     this.rightMenuPadding = const EdgeInsets.all(14),
+    this.rightMenuTooltip,
   });
 
-  /// controlls width of top bar menu
+  /// Width of the top menu.
   final double menuWidth;
 
-  /// controlls the duration of animation
+  /// Animation duration in milliseconds.
   final int animationDuration;
 
-  /// controlls the animation curve
+  /// Curve applied to the animation.
   final Curve animationCurve;
 
-  /// controller for animation open, close and toggle
+  /// Controller whose state drives the animation.
   final FlowDrawerController controller;
 
   // Left Menu Controls
-  /// moves the left menu button in x axis
+  /// Horizontal travel of the left control.
   final double leftMenuOffsetX;
 
-  /// moves the left menu button in y axis
+  /// Vertical travel of the left control.
   final double leftMenuOffsetY;
 
-  /// uses to scale up and down view size
+  /// Scale delta applied to the left control.
   final double leftMenuScale;
 
-  /// uses to rotate leftside menu button in x axis
+  /// X-axis rotation applied to the left control.
   final double leftMenuRotateX;
 
-  /// uses to rotate leftside menu button in y axis
+  /// Y-axis rotation applied to the left control.
   final double leftMenuRotateY;
 
-  /// uses to rotate leftside menu button in z axis
+  /// Z-axis rotation applied to the left control.
   final double leftMenuRotateZ;
 
-  /// this set the position of left menu button when controller is in closed state
+  /// Initial translation of the left control.
   final Offset leftMenuInitOffset;
 
-  /// used to change icon of left menu
+  /// Icon displayed by the left control.
   final Icon leftMenuIcon;
 
-  /// void callback function on tap
+  /// Called when the left control is activated.
   final VoidCallback? onLeftTap;
 
-  /// controlls the color of left button menu background
+  /// Background color of the left control.
   final Color leftMenuBgColor;
 
-  /// controlls the alpha value of the color
+  /// Background alpha of the left control, from 0 to 255.
   final int leftMenuBgAlpha;
 
-  /// controlls the left menu button radius
+  /// Corner radius of the left control.
   final double leftMenuRadius;
 
-  /// controlls the left menu button padding
+  /// Padding within the left control.
   final EdgeInsets leftMenuPadding;
 
+  /// Accessibility label and hover tooltip for the left control.
+  final String? leftMenuTooltip;
+
   // Right Menu Controls
-  /// moves the right menu button in x axis
+  /// Horizontal travel of the right control.
   final double rightMenuOffsetX;
 
-  /// moves the right menu button in y axis
+  /// Vertical travel of the right control.
   final double rightMenuOffsetY;
 
-  /// scale right menu bar button
+  /// Scale delta applied to the right control.
   final double rightMenuScale;
 
-  /// ratate right side menu bar in x axis
+  /// X-axis rotation applied to the right control.
   final double rightMenuRotateX;
 
-  /// rotate right side menu bar in y axis
+  /// Y-axis rotation applied to the right control.
   final double rightMenuRotateY;
 
-  /// rotate right side menu bar in z axis
+  /// Z-axis rotation applied to the right control.
   final double rightMenuRotateZ;
 
-  /// sets initial position of right side top bar menu button
+  /// Initial translation of the right control.
   final Offset rightMenuInitOffset;
 
-  /// changes the icon for right menu
+  /// Icon displayed by the right control.
   final Icon rightMenuIcon;
 
-  /// void callback fn on tap right button
+  /// Called when the right control is activated.
   final VoidCallback? onRightTap;
 
-  /// changes the color of right menu bar
+  /// Background color of the right control.
   final Color rightMenuBgColor;
 
-  /// changes the alpha value of color
+  /// Background alpha of the right control, from 0 to 255.
   final int rightMenuBgAlpha;
 
-  /// change the radius of right side bar menu
+  /// Corner radius of the right control.
   final double rightMenuRadius;
 
-  /// controlls the padding
+  /// Padding within the right control.
   final EdgeInsets rightMenuPadding;
+
+  /// Accessibility label and hover tooltip for the right control.
+  final String? rightMenuTooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -148,15 +156,19 @@ class FlowTopMenu extends HookWidget {
     useEffect(() => animationController.dispose, []);
 
     final isOpen = useListenable(controller).isOpen;
+    final disableAnimations =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
 
     useEffect(() {
-      if (isOpen) {
+      if (disableAnimations) {
+        animationController.value = isOpen ? 1 : 0;
+      } else if (isOpen) {
         animationController.forward();
       } else {
         animationController.reverse();
       }
       return null;
-    }, [isOpen]);
+    }, [isOpen, disableAnimations]);
 
     final animation = useAnimation(
       Tween<double>(begin: 0, end: 1).animate(
@@ -186,16 +198,13 @@ class FlowTopMenu extends HookWidget {
                 ..rotateY(leftMenuRotateY * animation),
               child: Transform.translate(
                 offset: leftMenuInitOffset,
-                child: GestureDetector(
+                child: _FlowTopMenuButton(
                   onTap: onLeftTap,
-                  child: Container(
-                    padding: leftMenuPadding,
-                    decoration: BoxDecoration(
-                      color: leftMenuBgColor.withAlpha(leftMenuBgAlpha),
-                      borderRadius: BorderRadius.circular(leftMenuRadius),
-                    ),
-                    child: leftMenuIcon,
-                  ),
+                  tooltip: leftMenuTooltip,
+                  backgroundColor: leftMenuBgColor.withAlpha(leftMenuBgAlpha),
+                  radius: leftMenuRadius,
+                  padding: leftMenuPadding,
+                  icon: leftMenuIcon,
                 ),
               ),
             ),
@@ -215,16 +224,13 @@ class FlowTopMenu extends HookWidget {
                 ..rotateY(rightMenuRotateY * animation),
               child: Transform.translate(
                 offset: rightMenuInitOffset,
-                child: GestureDetector(
+                child: _FlowTopMenuButton(
                   onTap: onRightTap,
-                  child: Container(
-                    padding: rightMenuPadding,
-                    decoration: BoxDecoration(
-                      color: rightMenuBgColor.withAlpha(rightMenuBgAlpha),
-                      borderRadius: BorderRadius.circular(rightMenuRadius),
-                    ),
-                    child: rightMenuIcon,
-                  ),
+                  tooltip: rightMenuTooltip,
+                  backgroundColor: rightMenuBgColor.withAlpha(rightMenuBgAlpha),
+                  radius: rightMenuRadius,
+                  padding: rightMenuPadding,
+                  icon: rightMenuIcon,
                 ),
               ),
             ),
@@ -232,5 +238,55 @@ class FlowTopMenu extends HookWidget {
         ),
       ),
     );
+  }
+}
+
+class _FlowTopMenuButton extends StatelessWidget {
+  const _FlowTopMenuButton({
+    required this.onTap,
+    required this.tooltip,
+    required this.backgroundColor,
+    required this.radius,
+    required this.padding,
+    required this.icon,
+  });
+
+  final VoidCallback? onTap;
+  final String? tooltip;
+  final Color backgroundColor;
+  final double radius;
+  final EdgeInsets padding;
+  final Icon icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final borderRadius = BorderRadius.circular(radius);
+    final button = Material(
+      color: backgroundColor,
+      borderRadius: borderRadius,
+      child: InkWell(
+        onTap: onTap,
+        canRequestFocus: onTap != null,
+        borderRadius: borderRadius,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          child: Padding(
+            padding: padding,
+            child: Center(child: ExcludeSemantics(child: icon)),
+          ),
+        ),
+      ),
+    );
+
+    final semanticButton = Semantics(
+      button: true,
+      enabled: onTap != null,
+      label: tooltip,
+      child: button,
+    );
+
+    return tooltip == null
+        ? semanticButton
+        : Tooltip(message: tooltip!, child: semanticButton);
   }
 }

@@ -1,3 +1,13 @@
+## [0.0.4] - Reliability, Accessibility, and Documentation
+
+- Cancelled stale drawer-item timers during rapid state changes and disposal
+- Added reduced-motion handling for drawer, item, and top-menu animations
+- Added accessible, keyboard-focusable menu controls with optional tooltips
+- Corrected right-docked item positioning and made horizontal travel responsive
+- Added controller, animation, gesture, disposal, semantics, and layout tests
+- Corrected README examples and aligned Flutter SDK compatibility metadata
+- Improved public API documentation and controller notification behavior
+
 ## [0.0.3] - Right-Sided FlowDrawer Support
 
 - Added support for right-side FlowDrawer

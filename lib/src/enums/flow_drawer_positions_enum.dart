@@ -1,9 +1,9 @@
-/// drawer postion enum to identify where should the drawer items list shown
+/// The physical edge where drawer items are displayed.
 enum FlowDrawerPosition {
-  /// items falls to the left side
+  /// Displays drawer items along the left edge.
   left,
 
-  /// items falls to the right
+  /// Displays drawer items along the right edge.
   right,
   // top, bottom can be added in future
 }

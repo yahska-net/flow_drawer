@@ -1,26 +1,27 @@
 import 'package:flutter/foundation.dart';
 
-/// Flow driver controlls
+/// Controls whether a [FlowDrawer] is open or closed.
 class FlowDrawerController extends ChangeNotifier {
   bool _isOpen = false;
 
-  /// simple get fn for getting state
+  /// Whether the drawer is currently open.
   bool get isOpen => _isOpen;
 
-  /// ctrl.open() trigger the controller to open the drawer
+  /// Opens the drawer.
   void open() {
+    if (_isOpen) return;
     _isOpen = true;
     notifyListeners();
   }
 
-  /// ctrl.open() trigger the controller to close the drawer
+  /// Closes the drawer.
   void close() {
+    if (!_isOpen) return;
     _isOpen = false;
     notifyListeners();
   }
 
-  /// ctrl.open() trigger the controller to close the drawer
-
+  /// Toggles the drawer between its open and closed states.
   void toggle() {
     _isOpen = !_isOpen;
     notifyListeners();

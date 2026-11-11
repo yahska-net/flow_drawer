@@ -1,129 +1,114 @@
-## 🎬 Demo
+# Flow Drawer
 
-![Flow Drawer Demo - Left Docked Drawer](https://github.com/yahska-net/flow_drawer/blob/main/assets/flow_drawer_left_dock.gif?raw=true)
+A customizable animated drawer for Flutter with left- and right-docked layouts, controller-driven state, swipe gestures, reduced-motion support, and accessible menu controls.
 
-![Flow Drawer Demo - Right Docked Drawer](https://github.com/yahska-net/flow_drawer/blob/main/assets/flow_drawer_right_dock.gif?raw=true)
+![Left-docked Flow Drawer](https://github.com/yahska-net/flow_drawer/blob/main/assets/flow_drawer_left_dock.gif?raw=true)
 
-# flow_drawer
+![Right-docked Flow Drawer](https://github.com/yahska-net/flow_drawer/blob/main/assets/flow_drawer_right_dock.gif?raw=true)
 
-A flexible and animated side drawer package for Flutter.  
-Easily add beautiful, responsive, and smooth-flowing drawers to your app — perfect for menus, sidebars, or custom navigation.
+## Features
 
----
+- Animated left- and right-docked drawers
+- Programmatic `open`, `close`, and `toggle` control
+- Edge swipe to open and directional swipe to close
+- Custom drawer backgrounds, transforms, shadows, and item widgets
+- Optional animated top controls
+- Reduced-motion support through Flutter's `MediaQuery`
+- Semantic, keyboard-focusable prebuilt menu items
 
-## ✨ Features
+## Installation
 
-- 🎯 Smooth animated drawer transitions
-- 🧱 Customizable drawer items
-- 🎮 Controller to open/close programmatically
-- 📐 Supports top menu layout
-- 🧩 Easy integration with any app structure
-
----
-
-## 🚀 Getting Started
-
-Add this to your `pubspec.yaml`:
+Add the current package version to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flow_drawer: ^1.0.0
+  flow_drawer: ^0.0.4
 ```
 
-Then run:
-
-```bash
-flutter pub get
-```
-
----
-
-## 📦 Import
+Then run `flutter pub get` and import the package:
 
 ```dart
 import 'package:flow_drawer/flow_drawer.dart';
 ```
 
----
+## Usage
 
-## 🛠️ Usage
+Create and dispose a controller with the lifecycle of your screen:
 
 ```dart
-final controller = FlowDrawerController();
+class DrawerScreen extends StatefulWidget {
+  const DrawerScreen({super.key});
 
-FlowDrawer(
-  controller: controller,
-  drawer: FlowDrawerListWidget(
-    items: [
-      FlowDrawerMenuItem(
-        icon: Icon(Icons.home, color: Colors.white),
-        text: "Home",
-        onTap: () => print("Home tapped"),
-        controller: controller,
+  @override
+  State<DrawerScreen> createState() => _DrawerScreenState();
+}
+
+class _DrawerScreenState extends State<DrawerScreen> {
+  final _drawerController = FlowDrawerController();
+
+  @override
+  void dispose() {
+    _drawerController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FlowDrawer(
+      controller: _drawerController,
+      drawerItems: [
+        FlowDrawerMenuItem(
+          icon: const Icon(Icons.home, color: Colors.white),
+          text: 'Home',
+          controller: _drawerController,
+          onTap: () {
+            // Navigate after the drawer's closing animation.
+          },
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Flow Drawer'),
+          leading: IconButton(
+            tooltip: 'Open navigation',
+            icon: const Icon(Icons.menu),
+            onPressed: _drawerController.open,
+          ),
+        ),
+        body: const Center(child: Text('Main content')),
       ),
-      // Add more items...
-    ],
-  ),
-  child: YourMainScreen(),
+    );
+  }
+}
+```
+
+Use `FlowDrawer.rightDocked(...)` for a drawer attached to the right edge.
+
+## Optional top menu
+
+Pass a `FlowTopMenu` through `topMenu` when `enableTopMenu` is enabled:
+
+```dart
+FlowTopMenu(
+  controller: _drawerController,
+  leftMenuIcon: const Icon(Icons.person, color: Colors.white),
+  leftMenuTooltip: 'Profile',
+  onLeftTap: () {},
+  rightMenuIcon: const Icon(Icons.close, color: Colors.white),
+  rightMenuTooltip: 'Close navigation',
+  onRightTap: _drawerController.close,
 )
 ```
 
----
-
-## 📄 Widgets
-
-### ✅ `FlowDrawer`
-
-Main drawer widget that wraps your screen.
-
-### ✅ `FlowDrawerController`
-
-Used to control drawer open/close programmatically.
-
-### ✅ `FlowDrawerMenuItem`
-
-Each item in the drawer list. Customizable with icon, text, and onTap.
-
-### ✅ `FlowDrawerListWidget`
-
-Vertical list layout for drawer items.
-
-### ✅ `FlowDrawerTopMenuWidget`
-
-Optional top widget to show user info, avatar, etc.
-
----
-
-## 📂 Example
-
-A full working example is available in the [`/example`](example) folder.
-
----
-
-## 📸 Screenshots
-
-<!-- ![Drawer Screenshot](assets/screenshot.png) -->
-
----
-
-## 🧪 Testing
-
-Run tests with:
+## Testing
 
 ```bash
+flutter analyze
 flutter test
 ```
 
----
+See the complete runnable application in [`example/`](example).
 
-## 📄 License
+## License
 
-MIT © [Akshay Kumar K M](https://github.com/akshaykumarkm)  
-_Powered by: [www.yahska.net](https://www.yahska.net)_
-
----
-
-## 🤝 Contribute
-
-Pull requests and issues are welcome!  
-If you find this package useful, please ⭐ it on [GitHub](https://github.com/akshaykumarkm/flow_drawer).
+MIT © [Akshay Kumar K M](https://github.com/akshaykumarkm). Powered by [Yahska](https://www.yahska.net).

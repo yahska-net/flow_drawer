@@ -28,6 +28,12 @@ class _FlowDrawerExampleState extends State<FlowDrawerExample> {
   final controller = FlowDrawerController();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Flow Drawer Menu Items or create your own custom widget
     final List<Widget> items = [
@@ -79,12 +85,14 @@ class _FlowDrawerExampleState extends State<FlowDrawerExample> {
           size: 22,
           color: Colors.white,
         ),
+        leftMenuTooltip: 'Profile',
         onRightTap: () => controller.close(),
         rightMenuIcon: Icon(
           Icons.close_outlined,
           size: 22,
           color: Colors.white,
         ),
+        rightMenuTooltip: 'Close navigation',
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -194,6 +202,12 @@ class _FlowDrawerRightDockedExampleState
   final controller = FlowDrawerController();
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Flow Drawer Menu Items or create your own custom widget
     final List<Widget> items = [
@@ -246,12 +260,14 @@ class _FlowDrawerRightDockedExampleState
           size: 22,
           color: Colors.white,
         ),
+        leftMenuTooltip: 'Profile',
         onRightTap: () => controller.close(),
         rightMenuIcon: Icon(
           Icons.close_outlined,
           size: 22,
           color: Colors.white,
         ),
+        rightMenuTooltip: 'Close navigation',
       ),
       child: Scaffold(
         appBar: AppBar(

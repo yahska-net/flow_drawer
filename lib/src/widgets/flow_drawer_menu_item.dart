@@ -1,9 +1,9 @@
 import 'package:flow_drawer/flow_drawer.dart';
 import 'package:flutter/material.dart';
 
-/// Sample Drawer menu list item for easy implementation of flow drawer. With this widget user can add drawer menu items easly with or without a cutsom widget.
+/// A ready-to-use, accessible menu item for a [FlowDrawer].
 class FlowDrawerMenuItem extends StatelessWidget {
-  /// controlls of this widget
+  /// Creates a drawer menu item.
   const FlowDrawerMenuItem({
     super.key,
     required this.icon,
@@ -16,31 +16,31 @@ class FlowDrawerMenuItem extends StatelessWidget {
     required this.controller,
   });
 
-  /// changes the icon
+  /// Icon shown before [text].
   final Icon icon;
 
-  /// changes the text
+  /// Visible label for the item.
   final String text;
 
-  ///. changes the text font size
+  /// Font size of [text].
   final double fontSize;
 
-  /// spacing between icon and text
+  /// Space between [icon] and [text].
   final double spacing;
 
-  /// padding arouynd the icon and text
+  /// Padding around the item's contents.
   final EdgeInsets padding;
 
-  /// void call back function
+  /// Called after the drawer closes and [onTapDelay] elapses.
   final VoidCallback? onTap;
 
-  ///. controlls the delay for excecuting the ontap function, basically after the animation time
+  /// Delay before invoking [onTap], allowing the close animation to finish.
   final int onTapDelay;
 
-  /// recieves flow conroller
+  /// Controller used to close the drawer when selected.
   final FlowDrawerController controller;
 
-  /// handles the menu iten
+  /// Closes the drawer and schedules the item's callback.
   void handleMenuClick({
     required FlowDrawerController controller,
     VoidCallback? onTap,
@@ -55,27 +55,42 @@ class FlowDrawerMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => handleMenuClick(
-        controller: controller,
-        onTap: onTap,
-        delay: onTapDelay,
-      ),
-      child: Padding(
-        padding: padding,
-        child: Row(
-          children: [
-            icon,
-            SizedBox(width: spacing),
-            Text(
-              text,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: fontSize,
-              ),
+    void activate() => handleMenuClick(
+      controller: controller,
+      onTap: onTap,
+      delay: onTapDelay,
+    );
+
+    return Semantics(
+      button: true,
+      enabled: onTap != null,
+      label: text,
+      onTap: onTap == null ? null : activate,
+      child: InkWell(
+        excludeFromSemantics: true,
+        canRequestFocus: onTap != null,
+        onTap: onTap == null ? null : activate,
+        child: ExcludeSemantics(
+          child: Padding(
+            padding: padding,
+            child: Row(
+              children: [
+                icon,
+                SizedBox(width: spacing),
+                Flexible(
+                  child: Text(
+                    text,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
