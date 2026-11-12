@@ -170,6 +170,41 @@ void main() {
       semantics.dispose();
     });
   });
+
+  group('FlowTopMenu', () {
+    testWidgets('stays compact and aligned to the top of the drawer', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final controller = FlowDrawerController();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlowDrawer(
+              controller: controller,
+              drawerItems: const [],
+              enableTopMenu: true,
+              topMenu: FlowTopMenu(
+                controller: controller,
+                leftMenuIcon: const Icon(Icons.person_outline),
+                rightMenuIcon: const Icon(Icons.close),
+              ),
+              child: const ColoredBox(color: Colors.white),
+            ),
+          ),
+        ),
+      );
+
+      final menuRect = tester.getRect(find.byType(FlowTopMenu));
+      expect(menuRect.top, 0);
+      expect(menuRect.height, lessThan(100));
+      expect(menuRect.width, 400);
+    });
+  });
 }
 
 Widget _testApp({

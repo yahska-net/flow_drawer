@@ -338,8 +338,19 @@ class FlowDrawer extends HookWidget {
               disableAnimations: disableAnimations,
             ),
 
-            /// Top Menu,
-            if (enableTopMenu) topMenu ?? SizedBox.shrink(),
+            /// Keep the top menu constrained to its intrinsic height. A plain
+            /// non-positioned child can receive the full height of this stack,
+            /// causing custom top menus to cover the entire drawer surface.
+            if (enableTopMenu)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: topMenu ?? const SizedBox.shrink(),
+                ),
+              ),
             Transform(
               alignment: Alignment.center,
               transform: Matrix4.identity()
