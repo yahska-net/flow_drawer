@@ -42,7 +42,7 @@ void main() {
         child: const SizedBox(),
       );
 
-      expect(leftDrawer.childOffsetX, isPositive);
+      expect(leftDrawer.childOffsetX, isNegative);
       expect(rightDrawer.childOffsetX, isPositive);
       expect(leftDrawer.drawerBackgroundDelta, isPositive);
       expect(rightDrawer.drawerBackgroundDelta, isNegative);

@@ -153,7 +153,7 @@ class FlowDrawer extends HookWidget {
 
     /// ----- Main Card / Child -----
     this.cardRadius = 50,
-    this.childOffsetX = 320,
+    this.childOffsetX = -320,
     this.childOffsetY = 20,
     this.childScale = 0.45,
     this.childRotationZ = 0.04,

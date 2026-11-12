@@ -35,7 +35,7 @@ Last updated: 2026-11-13
 6. The unused `FlowDrawerListWidget.controller` parameter was removed.
 7. Horizontal content travel is viewport-clamped, edge targets are wider, long menu labels truncate safely, controls expose semantics and focus, and all animations honor reduced-motion preferences.
 8. The optional top menu is explicitly top-aligned and constrained to its content height, with a compact 64 logical-pixel default bar that no longer covers the drawer viewport.
-9. The right-docked main child translates to the right, while the animated drawer backgrounds retain dock-specific direction.
+9. Main content follows the selected dock direction: left/default moves left and right-docked moves right, while animated drawer backgrounds retain their configured direction.
 10. Menu actions run immediately by default, and edge-swipe detection no longer overlays or blocks controls at the screen edge.
 
 ## Remaining Opportunities
@@ -53,3 +53,4 @@ Last updated: 2026-11-13
 - 2026-11-13: Corrected the top-menu stack placement and reduced its default vertical padding while preserving accessible 48 × 48 logical-pixel controls.
 - 2026-11-13: Corrected the right-docked background translation direction and restored the left-docked example to the left constructor.
 - 2026-11-13: Moved right-docked child travel to the right and removed the delayed, touch-blocking menu interaction behavior.
+- 2026-11-13: Corrected the default left-docked child translation so it moves left, opposite the right-docked child.
