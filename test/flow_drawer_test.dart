@@ -27,6 +27,27 @@ void main() {
   });
 
   group('FlowDrawer', () {
+    test('uses opposite horizontal transforms for each dock', () {
+      final controller = FlowDrawerController();
+      addTearDown(controller.dispose);
+
+      final leftDrawer = FlowDrawer(
+        controller: controller,
+        drawerItems: const [],
+        child: const SizedBox(),
+      );
+      final rightDrawer = FlowDrawer.rightDocked(
+        controller: controller,
+        drawerItems: const [],
+        child: const SizedBox(),
+      );
+
+      expect(leftDrawer.childOffsetX, isPositive);
+      expect(rightDrawer.childOffsetX, isNegative);
+      expect(leftDrawer.drawerBackgroundDelta, isPositive);
+      expect(rightDrawer.drawerBackgroundDelta, isNegative);
+    });
+
     testWidgets('opens and closes from its controller', (tester) async {
       final controller = FlowDrawerController();
       addTearDown(controller.dispose);

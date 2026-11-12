@@ -194,7 +194,7 @@ class FlowDrawer extends HookWidget {
     ),
     this.color,
     this.drawerImage,
-    this.drawerBackgroundDelta = 100,
+    this.drawerBackgroundDelta = -100,
     this.drawerBackgroundScale = 1.7,
     this.drawerPadding = const EdgeInsets.only(top: 100, left: 30),
     this.drawerShrinkWrap = false,
