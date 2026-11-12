@@ -27,7 +27,7 @@ void main() {
   });
 
   group('FlowDrawer', () {
-    test('uses opposite horizontal transforms for each dock', () {
+    test('uses the configured dock directions', () {
       final controller = FlowDrawerController();
       addTearDown(controller.dispose);
 
@@ -43,7 +43,7 @@ void main() {
       );
 
       expect(leftDrawer.childOffsetX, isPositive);
-      expect(rightDrawer.childOffsetX, isNegative);
+      expect(rightDrawer.childOffsetX, isPositive);
       expect(leftDrawer.drawerBackgroundDelta, isPositive);
       expect(rightDrawer.drawerBackgroundDelta, isNegative);
     });
@@ -145,9 +145,62 @@ void main() {
 
       expect(controller.isOpen, isTrue);
     });
+
+    testWidgets('does not block taps within the edge swipe region', (
+      tester,
+    ) async {
+      final controller = FlowDrawerController();
+      addTearDown(controller.dispose);
+      var tapped = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlowDrawer.rightDocked(
+              controller: controller,
+              drawerItems: const [],
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  key: const Key('edge-button'),
+                  onPressed: () => tapped = true,
+                  icon: const Icon(Icons.more_vert),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('edge-button')));
+      expect(tapped, isTrue);
+    });
   });
 
   group('FlowDrawerMenuItem', () {
+    testWidgets('runs its action immediately by default', (tester) async {
+      final controller = FlowDrawerController()..open();
+      addTearDown(controller.dispose);
+      var selected = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FlowDrawerMenuItem(
+              icon: const Icon(Icons.home),
+              text: 'Home',
+              onTap: () => selected = true,
+              controller: controller,
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Home'));
+      expect(controller.isOpen, isFalse);
+      expect(selected, isTrue);
+    });
+
     testWidgets('exposes button semantics and runs its delayed action', (
       tester,
     ) async {
