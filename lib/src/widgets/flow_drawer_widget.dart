@@ -153,7 +153,7 @@ class FlowDrawer extends HookWidget {
 
     /// ----- Main Card / Child -----
     this.cardRadius = 50,
-    this.childOffsetX = -320,
+    this.childOffsetX = 320,
     this.childOffsetY = 20,
     this.childScale = 0.45,
     this.childRotationZ = 0.04,
@@ -194,7 +194,7 @@ class FlowDrawer extends HookWidget {
     ),
     this.color,
     this.drawerImage,
-    this.drawerBackgroundDelta = -100,
+    this.drawerBackgroundDelta = 100,
     this.drawerBackgroundScale = 1.7,
     this.drawerPadding = const EdgeInsets.only(top: 100, left: 30),
     this.drawerShrinkWrap = false,
@@ -211,7 +211,7 @@ class FlowDrawer extends HookWidget {
 
     /// ----- Main Card / Child -----
     this.cardRadius = 50,
-    this.childOffsetX = 370,
+    this.childOffsetX = -370,
     this.childOffsetY = 20,
     this.childScale = 0.45,
     this.childRotationZ = -0.04,
@@ -286,10 +286,6 @@ class FlowDrawer extends HookWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        Offset? edgeDragStartPosition;
-        int? edgeDragPointer;
-        var edgeDragDistance = 0.0;
-        var horizontalDragDistance = 0.0;
         final maxHorizontalOffset = constraints.maxWidth.isFinite
             ? constraints.maxWidth * 0.82
             : childOffsetX.abs();
@@ -298,162 +294,145 @@ class FlowDrawer extends HookWidget {
           maxHorizontalOffset,
         );
 
-        return Listener(
-          behavior: HitTestBehavior.translucent,
-          onPointerDown: (event) {
-            if (isOpen || !enableSwipeToOpen) return;
-            edgeDragPointer = event.pointer;
-            edgeDragStartPosition = event.localPosition;
-            edgeDragDistance = 0;
-          },
-          onPointerMove: (event) {
-            if (event.pointer != edgeDragPointer || isOpen) return;
-            edgeDragDistance += event.delta.dx;
-            final dragStart = edgeDragStartPosition;
-            if (dragStart == null) return;
-
-            final isLeftDrawer = drawerPosition == FlowDrawerPosition.left;
-            final startedAtDockEdge = isLeftDrawer
-                ? dragStart.dx <= 24
-                : dragStart.dx >= constraints.maxWidth - 24;
-            final movesInward = isLeftDrawer
-                ? edgeDragDistance > 10
-                : edgeDragDistance < -10;
-            if (startedAtDockEdge && movesInward) {
-              controller.open();
-            }
-          },
-          onPointerUp: (event) {
-            if (event.pointer == edgeDragPointer) edgeDragPointer = null;
-          },
-          onPointerCancel: (event) {
-            if (event.pointer == edgeDragPointer) edgeDragPointer = null;
-          },
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned.fill(
-                child: Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..translateByDouble(
-                      drawerBackgroundDelta * animation,
-                      0,
-                      0,
-                      1.0,
-                    )
-                    ..scaleByDouble(
-                      drawerBackgroundScale,
-                      drawerBackgroundScale,
-                      1.0,
-                      1.0,
-                    ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: drawerImage,
-                      gradient: (color == null && drawerImage == null)
-                          ? drawerGradient
-                          : null,
-                      color: (drawerImage == null && color != null)
-                          ? color
-                          : null,
-                    ),
-                  ),
-                ),
-              ),
-
-              FlowDrawerListWidget(
-                drawerItems: drawerItems,
-                isOpen: isItemsOpen.value,
-                drawerPadding: drawerPadding,
-                shrinkWrap: drawerShrinkWrap,
-                physics: drawerPhysics,
-                position: drawerPosition,
-                itemsEnterAnimationDelay: itemsEnterAnimationDelay,
-                disableAnimations: disableAnimations,
-              ),
-
-              /// Keep the top menu constrained to its intrinsic height. A plain
-              /// non-positioned child can receive the full height of this stack,
-              /// causing custom top menus to cover the entire drawer surface.
-              if (enableTopMenu)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: topMenu ?? const SizedBox.shrink(),
-                  ),
-                ),
-              Transform(
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned.fill(
+              child: Transform(
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
-                  ..setEntry(3, 2, -0.0018)
                   ..translateByDouble(
-                    responsiveChildOffsetX * animation,
-                    childOffsetY * animation,
+                    drawerBackgroundDelta * animation,
                     0,
-                    1 + (animation * childScale),
+                    0,
+                    1.0,
                   )
-                  ..rotateZ(childRotationZ * animation)
-                  ..rotateX(cardRotateX * animation)
-                  ..rotateY(cardRotateY * animation),
-                child: Stack(
-                  children: [
-                    Transform(
-                      transform: Matrix4.identity()
-                        ..setEntry(3, 2, -0.0018)
-                        ..translateByDouble(
-                          shadowOffsetX * animation,
-                          shadowOffsetY,
-                          0,
-                          1 + (animation * shadowCardScale),
-                        ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: shadowCardColor.withAlpha(
-                            shadowCardColorAlpha,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            shadowCardRadius * animation,
-                          ),
-                        ),
-                      ),
-                    ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        cardRadius * animation,
-                      ),
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: isOpen && enableTapScreenToClose
-                            ? controller.close
-                            : null,
-                        onHorizontalDragStart: (details) {
-                          horizontalDragDistance = 0;
-                        },
-                        onHorizontalDragUpdate: (details) {
-                          horizontalDragDistance += details.delta.dx;
-                          final isLeftDrawer =
-                              drawerPosition == FlowDrawerPosition.left;
-                          if (isOpen) {
-                            final shouldClose = isLeftDrawer
-                                ? horizontalDragDistance < -10
-                                : horizontalDragDistance > 10;
-                            if (shouldClose && enableSwipeToClose) {
-                              controller.close();
-                            }
-                          }
-                        },
-                        child: AbsorbPointer(absorbing: isOpen, child: child),
-                      ),
-                    ),
-                  ],
+                  ..scaleByDouble(
+                    drawerBackgroundScale,
+                    drawerBackgroundScale,
+                    1.0,
+                    1.0,
+                  ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: drawerImage,
+                    gradient: (color == null && drawerImage == null)
+                        ? drawerGradient
+                        : null,
+                    color: (drawerImage == null && color != null)
+                        ? color
+                        : null,
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+
+            FlowDrawerListWidget(
+              drawerItems: drawerItems,
+              isOpen: isItemsOpen.value,
+              drawerPadding: drawerPadding,
+              shrinkWrap: drawerShrinkWrap,
+              physics: drawerPhysics,
+              position: drawerPosition,
+              itemsEnterAnimationDelay: itemsEnterAnimationDelay,
+              disableAnimations: disableAnimations,
+            ),
+
+            /// Top Menu,
+            if (enableTopMenu) topMenu ?? SizedBox.shrink(),
+            Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, -0.0018)
+                ..translateByDouble(
+                  responsiveChildOffsetX * animation,
+                  childOffsetY * animation,
+                  0,
+                  1 + (animation * childScale),
+                )
+                ..rotateZ(childRotationZ * animation)
+                ..rotateX(cardRotateX * animation)
+                ..rotateY(cardRotateY * animation),
+              child: Stack(
+                children: [
+                  Transform(
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, -0.0018)
+                      ..translateByDouble(
+                        shadowOffsetX * animation,
+                        shadowOffsetY,
+                        0,
+                        1 + (animation * shadowCardScale),
+                      ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: shadowCardColor.withAlpha(shadowCardColorAlpha),
+                        borderRadius: BorderRadius.circular(
+                          shadowCardRadius * animation,
+                        ),
+                      ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(cardRadius * animation),
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () =>
+                          enableTapScreenToClose ? controller.close() : null,
+                      onHorizontalDragStart: (details) {
+                        /// Optional: track starting point
+                      },
+                      onHorizontalDragUpdate: (details) {
+                        final isLeftDrawer =
+                            drawerPosition == FlowDrawerPosition.left;
+                        final shouldClose = isLeftDrawer
+                            ? details.delta.dx <
+                                  -5 // swipe left to close left drawer
+                            : details.delta.dx >
+                                  5; // swipe right to close right drawer
+
+                        if (shouldClose && enableSwipeToClose) {
+                          controller.close();
+                        }
+                      },
+                      child: AbsorbPointer(absorbing: isOpen, child: child),
+                    ),
+                  ),
+                  enableSwipeToOpen
+                      ? drawerPosition == FlowDrawerPosition.left
+                            ? Positioned(
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: 24,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onHorizontalDragUpdate: (details) {
+                                    if (details.delta.dx > 10) {
+                                      controller.open();
+                                    }
+                                  },
+                                ),
+                              )
+                            : Positioned(
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: 24,
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onHorizontalDragUpdate: (details) {
+                                    if (details.delta.dx < -10) {
+                                      controller.open();
+                                    }
+                                  },
+                                ),
+                              )
+                      : SizedBox.shrink(),
+                ],
+              ),
+            ),
+          ],
         );
       },
     );

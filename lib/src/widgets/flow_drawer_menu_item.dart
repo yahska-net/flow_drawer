@@ -12,7 +12,7 @@ class FlowDrawerMenuItem extends StatelessWidget {
     this.spacing = 18,
     this.padding = const EdgeInsets.all(8.0),
     this.onTap,
-    this.onTapDelay = 0,
+    this.onTapDelay = 400,
     required this.controller,
   });
 
@@ -31,16 +31,16 @@ class FlowDrawerMenuItem extends StatelessWidget {
   /// Padding around the item's contents.
   final EdgeInsets padding;
 
-  /// Called when the item is selected, after any configured [onTapDelay].
+  /// Called after the drawer closes and [onTapDelay] elapses.
   final VoidCallback? onTap;
 
-  /// Optional delay before invoking [onTap]. Defaults to no delay.
+  /// Delay before invoking [onTap], allowing the close animation to finish.
   final int onTapDelay;
 
   /// Controller used to close the drawer when selected.
   final FlowDrawerController controller;
 
-  /// Closes the drawer and invokes or schedules the item's callback.
+  /// Closes the drawer and schedules the item's callback.
   void handleMenuClick({
     required FlowDrawerController controller,
     VoidCallback? onTap,
@@ -48,10 +48,7 @@ class FlowDrawerMenuItem extends StatelessWidget {
   }) {
     controller.close();
 
-    if (onTap == null) return;
-    if (delay <= 0) {
-      onTap();
-    } else {
+    if (onTap != null) {
       Future.delayed(Duration(milliseconds: delay), onTap);
     }
   }

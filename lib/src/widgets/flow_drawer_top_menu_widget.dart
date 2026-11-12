@@ -177,9 +177,8 @@ class FlowTopMenu extends HookWidget {
     );
 
     return SafeArea(
-      bottom: false,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
         width: menuWidth,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

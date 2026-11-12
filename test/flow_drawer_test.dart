@@ -27,27 +27,6 @@ void main() {
   });
 
   group('FlowDrawer', () {
-    test('uses the configured dock directions', () {
-      final controller = FlowDrawerController();
-      addTearDown(controller.dispose);
-
-      final leftDrawer = FlowDrawer(
-        controller: controller,
-        drawerItems: const [],
-        child: const SizedBox(),
-      );
-      final rightDrawer = FlowDrawer.rightDocked(
-        controller: controller,
-        drawerItems: const [],
-        child: const SizedBox(),
-      );
-
-      expect(leftDrawer.childOffsetX, isNegative);
-      expect(rightDrawer.childOffsetX, isPositive);
-      expect(leftDrawer.drawerBackgroundDelta, isPositive);
-      expect(rightDrawer.drawerBackgroundDelta, isNegative);
-    });
-
     testWidgets('opens and closes from its controller', (tester) async {
       final controller = FlowDrawerController();
       addTearDown(controller.dispose);
@@ -145,62 +124,9 @@ void main() {
 
       expect(controller.isOpen, isTrue);
     });
-
-    testWidgets('does not block taps within the edge swipe region', (
-      tester,
-    ) async {
-      final controller = FlowDrawerController();
-      addTearDown(controller.dispose);
-      var tapped = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FlowDrawer.rightDocked(
-              controller: controller,
-              drawerItems: const [],
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  key: const Key('edge-button'),
-                  onPressed: () => tapped = true,
-                  icon: const Icon(Icons.more_vert),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.tap(find.byKey(const Key('edge-button')));
-      expect(tapped, isTrue);
-    });
   });
 
   group('FlowDrawerMenuItem', () {
-    testWidgets('runs its action immediately by default', (tester) async {
-      final controller = FlowDrawerController()..open();
-      addTearDown(controller.dispose);
-      var selected = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FlowDrawerMenuItem(
-              icon: const Icon(Icons.home),
-              text: 'Home',
-              onTap: () => selected = true,
-              controller: controller,
-            ),
-          ),
-        ),
-      );
-
-      await tester.tap(find.text('Home'));
-      expect(controller.isOpen, isFalse);
-      expect(selected, isTrue);
-    });
-
     testWidgets('exposes button semantics and runs its delayed action', (
       tester,
     ) async {
@@ -242,41 +168,6 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
       expect(selected, isTrue);
       semantics.dispose();
-    });
-  });
-
-  group('FlowTopMenu', () {
-    testWidgets('stays compact and aligned to the top of the drawer', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(400, 800));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-
-      final controller = FlowDrawerController();
-      addTearDown(controller.dispose);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FlowDrawer(
-              controller: controller,
-              drawerItems: const [],
-              enableTopMenu: true,
-              topMenu: FlowTopMenu(
-                controller: controller,
-                leftMenuIcon: const Icon(Icons.person_outline),
-                rightMenuIcon: const Icon(Icons.close),
-              ),
-              child: const ColoredBox(color: Colors.white),
-            ),
-          ),
-        ),
-      );
-
-      final menuRect = tester.getRect(find.byType(FlowTopMenu));
-      expect(menuRect.top, 0);
-      expect(menuRect.height, lessThan(100));
-      expect(menuRect.width, 400);
     });
   });
 }
